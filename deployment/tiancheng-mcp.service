@@ -1,0 +1,23 @@
+[Unit]
+Description=Quantified Tiancheng read-only MCP
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=tiancheng-mcp
+Group=tiancheng-mcp
+WorkingDirectory=/opt/tiancheng-mcp/current
+EnvironmentFile=/var/lib/tiancheng-mcp/service.env
+ExecStart=/opt/tiancheng-mcp/venv/bin/python -m uvicorn server:app_factory --factory --host 127.0.0.1 --port 8766 --no-access-log --log-level warning
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/tiancheng-mcp
+
+[Install]
+WantedBy=multi-user.target
